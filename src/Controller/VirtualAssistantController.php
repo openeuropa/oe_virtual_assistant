@@ -2,9 +2,8 @@
 
 namespace Drupal\oe_virtual_assistant\Controller;
 
-use Drupal\Core\Access\AccessResult;
+use Drupal\Core\Config\ImmutableConfig;
 use Drupal\Core\Controller\ControllerBase;
-use Drupal\Core\Session\AccountInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -13,20 +12,20 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class VirtualAssistantController extends ControllerBase {
 
   /**
-   * Current user.
+   * Configuration.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var \Drupal\Core\Config\ImmutableConfig
    */
-  protected $currentUser;
+  protected ImmutableConfig $config;
 
   /**
    * Constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $current_user
-   *   Current user.
+   * @param \Drupal\Core\Config\ImmutableConfig $config
+   *   Module configuration.
    */
-  public function __construct(AccountInterface $current_user) {
-    $this->currentUser = $current_user;
+  public function __construct(ImmutableConfig $config) {
+    $this->config = $config;
   }
 
   /**
@@ -34,7 +33,7 @@ class VirtualAssistantController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('current_user')
+      $container->get('config.factory')->get('oe_virtual_assistant.settings')
     );
   }
 
@@ -45,8 +44,7 @@ class VirtualAssistantController extends ControllerBase {
    *   Render array.
    */
   public function content() {
-    $config = \Drupal::config('oe_virtual_assistant.settings');
-    $build = [
+    return [
       '#markup' => '<div id="virtual-assistant"></div>',
       '#attached' => [
         'library' => [
@@ -54,23 +52,12 @@ class VirtualAssistantController extends ControllerBase {
         ],
         'drupalSettings' => [
           'oe_virtual_assistant' => [
-            'backend_service_url' => $config->get('backend_service_url'),
+            'backend_service_url' => $this->config->get('backend_service_url'),
           ],
         ],
 
       ],
     ];
-    return $build;
-  }
-
-  /**
-   * Access callback.
-   *
-   * @return \Drupal\Core\Access\AccessResult|\Drupal\Core\Access\AccessResultAllowed|\Drupal\Core\Access\AccessResultNeutral
-   *   Access object.
-   */
-  public function access() {
-    return AccessResult::allowedIf($this->currentUser->hasPermission('access virtual assistant chat'));
   }
 
 }
