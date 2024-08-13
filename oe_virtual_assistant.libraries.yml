@@ -1,0 +1,6 @@
+chat:
+  css:
+    base:
+      dist/virtual-assistant-chat.css: {}
+  js:
+    dist/virtual-assistant-chat.js: { attributes: { type: module } }
