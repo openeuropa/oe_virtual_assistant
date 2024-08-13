@@ -1,12 +1,12 @@
 chat:
   css:
     base:
-      assets/virtual-assistant-chat.css: {}
+      dist/virtual-assistant-chat.css: {}
   js:
     # @todo: change this, instead package react locally using NPM.
     https://unpkg.com/react@18/umd/react.production.min.js: { type: external }
     https://unpkg.com/react-dom@18/umd/react-dom.production.min.js: { type: external }
-    assets/oe_virtual_assistant.behavior.js: {}
-    assets/virtual-assistant-chat.umd.js: {}
+    js/oe_virtual_assistant.behavior.js: {}
+    dist/virtual-assistant-chat.js: {}
   dependencies:
     - core/drupal
