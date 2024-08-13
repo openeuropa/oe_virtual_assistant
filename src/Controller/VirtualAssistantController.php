@@ -45,12 +45,19 @@ class VirtualAssistantController extends ControllerBase {
    *   Render array.
    */
   public function content() {
+    $config = \Drupal::config('oe_virtual_assistant.settings');
     $build = [
       '#markup' => '<div id="virtual-assistant"></div>',
       '#attached' => [
         'library' => [
           'oe_virtual_assistant/chat',
         ],
+        'drupalSettings' => [
+          'oe_virtual_assistant' => [
+            'backend_service_url' => $config->get('backend_service_url'),
+          ],
+        ],
+
       ],
     ];
     return $build;

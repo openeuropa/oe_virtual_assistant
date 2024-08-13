@@ -10,3 +10,4 @@ chat:
     dist/virtual-assistant-chat.js: {}
   dependencies:
     - core/drupal
+    - core/drupalSettings

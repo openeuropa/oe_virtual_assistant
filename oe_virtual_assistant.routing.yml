@@ -1,9 +1,16 @@
-  oe_virtual_assistant.virtual_assistant:
-    path: '/admin/virtual-assistant'
-    defaults:
-      _controller: '\Drupal\oe_virtual_assistant\Controller\VirtualAssistantController::content'
-      _title: 'Virtual Assistant'
-    requirements:
-      _permission: 'access virtual assistant chat'
-    options:
-      _admin_route: true
+oe_virtual_assistant.virtual_assistant:
+  path: '/admin/virtual-assistant'
+  defaults:
+    _controller: '\Drupal\oe_virtual_assistant\Controller\VirtualAssistantController::content'
+    _title: 'Virtual Assistant'
+  requirements:
+    _permission: 'access virtual assistant chat'
+  options:
+    _admin_route: true
+oe_virtual_assistant.settings_form:
+  path: '/admin/config/virtual-assistant'
+  defaults:
+    _form: '\Drupal\oe_virtual_assistant\Form\VirtualAssistantSettingsForm'
+    _title: 'Virtual Assistant Settings'
+  requirements:
+    _permission: 'configure virtual assistant'
