@@ -1,13 +1,10 @@
-import ReactDOM from "react-dom";
-import Chat from "./virtual-assistant-chat.js";
-
 (function (Drupal) {
   Drupal.behaviors.VirtualAssistantBehavior = {
     attach: function (context, settings) {
       // @todo: create an empty element and use that one instead.
       const domContainer = document.querySelector('#content');
       const root = ReactDOM.createRoot(domContainer);
-      const chat = Chat({
+      const chat = VirtualAssistant({
         // @todo: make this a Drupal config in due time.
         url: "http://localhost:5000",
         style: {
