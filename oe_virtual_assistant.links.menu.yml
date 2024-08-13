@@ -1,0 +1,5 @@
+oe_virtual_assistant.settings_form:
+  title: 'Virtual Assistant'
+  parent: system.admin_config_services
+  description: 'Configure the Virtual Assistant integration.'
+  route_name: oe_virtual_assistant.settings_form
