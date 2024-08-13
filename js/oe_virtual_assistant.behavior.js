@@ -1,7 +1,6 @@
 (function (Drupal, drupalSettings) {
   Drupal.behaviors.VirtualAssistantBehavior = {
     attach: function (context, settings) {
-      // @todo: create an empty element and use that one instead.
       const domContainer = document.querySelector('#virtual-assistant');
       const root = ReactDOM.createRoot(domContainer);
       const chat = VirtualAssistant({
