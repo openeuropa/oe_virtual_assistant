@@ -45,6 +45,14 @@ up:
 shell:
 	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
 
+# Copy React library locally.
+.PHONY: copy-react
+copy-react:
+	mkdir -p ./dist
+	rm -rf ./dist/react*
+	cp ./node_modules/react/umd/react.production.min.js ./dist
+	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist
+
 # https://stackoverflow.com/a/6273809/1826109
 %:
 	@:
