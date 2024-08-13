@@ -1,0 +1,13 @@
+diff --git a/src/ImportMapsManager.php b/src/ImportMapsManager.php
+index 1ee1750..86267a3 100755
+--- a/src/ImportMapsManager.php
++++ b/src/ImportMapsManager.php
+@@ -55,7 +55,7 @@ final class ImportMapsManager extends DefaultPluginManager implements PluginMana
+       return;
+     }
+     $provider = $this->extractProviderFromDefinition($definition);
+-    $definition['path'] = sprintf('/%s/%s', $this->moduleExtensionList->getPath($provider), $definition['path']);
++    $definition['path'] = sprintf('%s/%s/%s', base_path(), $this->moduleExtensionList->getPath($provider), $definition['path']);
+   }
+ 
+ }

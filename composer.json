@@ -7,7 +7,9 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
-        "drupal/core": "^10"
+        "cweagans/composer-patches": "~1.4 || ^2.0",
+        "drupal/core": "^10",
+        "drupal/react": "^3.0@alpha"
     },
     "require-dev": {
         "composer/installers": "^1.5",
@@ -49,6 +51,9 @@
             "build/themes/contrib/{$name}": ["type:drupal-theme"]
         },
         "patches": {
+            "drupal/importmaps": {
+                "use base_path() in import maps URLs": "./patches/importmaps-use-base-path.patch"
+            }
         },
         "drupal-scaffold": {
             "locations": {

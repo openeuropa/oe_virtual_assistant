@@ -14,4 +14,4 @@ yarn.lock
 docker-compose.*.yml
 /.gitattributes
 /.env
-/dist
+/assets/virtual-assistant-chat.*

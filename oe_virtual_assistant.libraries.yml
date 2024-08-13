@@ -1,6 +1,8 @@
 chat:
   css:
     base:
-      dist/virtual-assistant-chat.css: {}
+      assets/virtual-assistant-chat.css: {}
   js:
-    dist/virtual-assistant-chat.js: { attributes: { type: module } }
+    assets/oe_virtual_assistant.behavior.js: { attributes: { type: module } }
+  dependencies:
+    - core/drupal
