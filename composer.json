@@ -7,6 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.0",
+        "cweagans/composer-patches": "~1.4 || ^2.0",
         "drupal/core": "^10"
     },
     "require-dev": {
@@ -47,8 +48,6 @@
             "build/profiles/contrib/{$name}": ["type:drupal-profile"],
             "build/modules/contrib/{$name}": ["type:drupal-module"],
             "build/themes/contrib/{$name}": ["type:drupal-theme"]
-        },
-        "patches": {
         },
         "drupal-scaffold": {
             "locations": {

@@ -3,6 +3,8 @@ include .env
 DOCKER_COMPOSE ?= docker-compose
 DOCKER_CMD ?= exec
 
+default: install
+
 # Files to make
 .env:
 	cp .env.dist .env
@@ -18,7 +20,7 @@ help : Makefile
 # Build tasks for development.
 ## build		: Build the development environment.
 .PHONY: build build/composer
-build: .env dev up build/composer
+build: .env dev up build/composer dist
 build/composer:
 	@echo "Building $(PROJECT_NAME) project development environment."
 	$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash -c "composer install"
@@ -44,6 +46,17 @@ up:
 .PHONY: shell
 shell:
 	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
+
+# Collect library code under ./dist.
+.PHONY: dist
+dist:
+	rm -rf ./dist
+	mkdir -p ./dist
+	curl -s --output dist/artifacts.zip --location --header "PRIVATE-TOKEN: $(GITLAB_ACCESS_TOKEN)" https://git.fpfis.tech.ec.europa.eu/api/v4/projects/$(GITLAB_PROJECT_ID)/jobs/$(GITLAB_JOB_ID)/artifacts
+	unzip dist/artifacts.zip
+	rm dist/artifacts.zip
+	cp ./node_modules/react/umd/react.production.min.js ./dist
+	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist
 
 # https://stackoverflow.com/a/6273809/1826109
 %:

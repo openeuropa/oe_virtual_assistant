@@ -1,0 +1,7 @@
+oe_virtual_assistant.settings:
+  type: config_object
+  label: 'Virtual Assistant Settings'
+  mapping:
+    backend_service_url:
+      type: string
+      label: 'Backend Service URL'
