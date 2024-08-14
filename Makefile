@@ -45,11 +45,14 @@ up:
 shell:
 	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
 
-# Copy React library locally.
-.PHONY: copy-react
-copy-react:
+# Collect library code under ./dist.
+.PHONY: dist
+dist:
+	rm -rf ./dist
 	mkdir -p ./dist
-	rm -rf ./dist/react*
+	curl -s --output dist/artifacts.zip --location --header "PRIVATE-TOKEN: $(GITLAB_ACCESS_TOKEN)" https://git.fpfis.tech.ec.europa.eu/api/v4/projects/$(GITLAB_PROJECT_ID)/jobs/$(GITLAB_JOB_ID)/artifacts
+	unzip dist/artifacts.zip
+	rm dist/artifacts.zip
 	cp ./node_modules/react/umd/react.production.min.js ./dist
 	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist
 

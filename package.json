@@ -1,7 +1,7 @@
 {
   "name": "oe_virtual_assistant",
   "scripts": {
-    "postinstall": "make copy-react"
+    "postinstall": "make dist"
   },
   "dependencies": {
     "react": "^18.3.1",
