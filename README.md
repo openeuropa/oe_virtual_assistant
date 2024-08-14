@@ -4,13 +4,25 @@ Virtual Assistant integration module for OpenEuropa.
 
 ## Development setup
 
-You can build the development site by running the following steps:
+You need to set an access token to the EC GitLab. To do so copy `.env.dist` to `.env` and set `GITLAB_ACCESS_TOKEN=`
 
-* Install the Composer dependencies:
-
-```bash
-composer install
+```shell
+cp .env.dist .env # then set GITLAB_ACCESS_TOKEN=
 ```
+
+After that, simply run:
+
+```shell
+make
+```
+
+This will:
+
+- Download the library and React using NPM
+- Copy JS assets in `./dist`
+- Start docker containers
+- Build and install the site
+
 
 A post command hook (`drupal:site-setup`) is triggered automatically after `composer install`.
 This will symlink the module in the proper directory within the test site and perform token substitution in test configuration files.

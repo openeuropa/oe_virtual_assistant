@@ -3,6 +3,8 @@ include .env
 DOCKER_COMPOSE ?= docker-compose
 DOCKER_CMD ?= exec
 
+default: install
+
 # Files to make
 .env:
 	cp .env.dist .env
@@ -18,7 +20,7 @@ help : Makefile
 # Build tasks for development.
 ## build		: Build the development environment.
 .PHONY: build build/composer
-build: .env dev up build/composer
+build: .env dev up build/composer dist
 build/composer:
 	@echo "Building $(PROJECT_NAME) project development environment."
 	$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash -c "composer install"
