@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Module file.
+ */
+
+declare(strict_types=1);
+
+use Drupal\Core\Url;
+
+/**
+ * Implements hook_toolbar().
+ */
+function oe_virtual_assistant_toolbar() {
+  $items = [];
+  $url = Url::fromRoute('oe_virtual_assistant.virtual_assistant');
+  if ($url->access()) {
+    $items['virtual-assistant'] = [
+      '#type' => 'toolbar_item',
+      'tab' => [
+        '#type' => 'link',
+        '#title' => t('Virtual Assistant'),
+        '#url' => $url,
+        '#attributes' => [
+          'class' => ['toolbar-icon toolbar-icon-help-main'],
+        ],
+      ],
+      '#weight' => 200,
+    ];
+  }
+  return $items;
+}

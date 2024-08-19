@@ -1,0 +1,1205 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "COMM Virtual Assistant Back Office API",
+    "version": "3.4.0"
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:5000/",
+      "description": "dev"
+    },
+    {
+      "url": "https://d2helldxakxygq.cloudfront.net/",
+      "description": "pilot"
+    }
+  ],
+  "paths": {
+    "/ask": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "Ask",
+        "description": "Retrieves documents from the assistant.",
+        "operationId": "ask_ask_get",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Question",
+              "description": "A question for which to look in the deepsetCloud index."
+            },
+            "description": "A question for which to look in the deepsetCloud index."
+          },
+          {
+            "name": "top_k",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "maximum": 30,
+                  "minimum": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Top k",
+              "description": "Number of documents to be returned, between 1 and 30.",
+              "default": 10
+            },
+            "description": "Number of documents to be returned, between 1 and 30."
+          },
+          {
+            "name": "after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "format": "date"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "After",
+              "description": "A date after which the returned responses must have been published or updated.",
+              "default": "2022-11-29"
+            },
+            "description": "A date after which the returned responses must have been published or updated."
+          },
+          {
+            "name": "source_filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source filter",
+              "description": "A label or list of labels of sources to be included. See /sources."
+            },
+            "description": "A label or list of labels of sources to be included. See /sources."
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Authorization"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AssistantAnswer"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/feedbacks": {
+      "post": {
+        "tags": ["Search"],
+        "summary": "Record Feedback",
+        "description": "Records a user feedback on a provided answer.",
+        "operationId": "record_feedback_feedbacks_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecordFeedbackQuery"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "title": "Response Record Feedback Feedbacks Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/sources": {
+      "get": {
+        "tags": ["Search"],
+        "summary": "List Sources",
+        "description": "Get the list of existing sources, with their label key and document count.",
+        "operationId": "list_sources_sources_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response List Sources Sources Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trends": {
+      "get": {
+        "tags": ["Trends"],
+        "summary": "List Trend Files",
+        "description": "Get the list of trend files generated from social media extracts.",
+        "operationId": "list_trend_files_trends_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FileMeta"
+                  },
+                  "type": "array",
+                  "title": "Response List Trend Files Trends Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trends/url/download": {
+      "get": {
+        "tags": ["Trends"],
+        "summary": "Find Trends Url",
+        "description": "Retrieve a URL from which a result file can be downloaded.",
+        "operationId": "find_trends_url_trends_url_download_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Find Trends Url Trends Url Download Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trends/url/upload": {
+      "get": {
+        "tags": ["Trends"],
+        "summary": "Open Trends Url",
+        "description": "Create a URL to upload a social media extract file.",
+        "operationId": "open_trends_url_trends_url_upload_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Open Trends Url Trends Url Upload Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trends/process": {
+      "get": {
+        "tags": ["Trends"],
+        "summary": "Process Trends",
+        "description": "Process a previously uploaded social media extract csv file. The file must contain \"origin\", \"message\" and \"url\" columns.",
+        "operationId": "process_trends_trends_process_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Process Trends Trends Process Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs": {
+      "get": {
+        "tags": ["Logging"],
+        "summary": "List Log Files",
+        "description": "Get the list of log files.",
+        "operationId": "list_log_files_logs_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/FileMeta"
+                  },
+                  "type": "array",
+                  "title": "Response List Log Files Logs Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/logs/url/download": {
+      "get": {
+        "tags": ["Logging"],
+        "summary": "Find Log Url",
+        "description": "Retrieve a URL from which a log file can be downloaded.",
+        "operationId": "find_log_url_logs_url_download_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Find Log Url Logs Url Download Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/url/upload": {
+      "get": {
+        "tags": ["Documents"],
+        "summary": "Open File Url",
+        "description": "Create a URL to upload a social media extract file.",
+        "operationId": "open_file_url_documents_url_upload_get",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Open File Url Documents Url Upload Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/process/{filename}": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Ingest Document",
+        "description": "Start the ingestion of a previously uploaded document.",
+        "operationId": "ingest_document_documents_process__filename__post",
+        "parameters": [
+          {
+            "name": "filename",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File name",
+              "description": "Name of the file."
+            },
+            "description": "Name of the file."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DocMeta"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string",
+                  "title": "Response Ingest Document Documents Process  Filename  Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/review": {
+      "get": {
+        "tags": ["Documents"],
+        "summary": "Review List",
+        "description": "Get the list of documents pending review.",
+        "operationId": "review_list_documents_review_get",
+        "parameters": [
+          {
+            "name": "assignee",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Assignee",
+              "description": "Identifier of the person intended to reivew."
+            },
+            "description": "Identifier of the person intended to reivew."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BaseDoc"
+                  },
+                  "title": "Response Review List Documents Review Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/update": {
+      "post": {
+        "tags": ["Documents"],
+        "summary": "Update Document",
+        "description": "Update a document in the index.",
+        "operationId": "update_document_documents_update_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BaseDoc"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "title": "Response Update Document Documents Update Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/documents/delete/{file_id}": {
+      "delete": {
+        "tags": ["Documents"],
+        "summary": "Delete Document",
+        "description": "Update a document in the index.",
+        "operationId": "delete_document_documents_delete__file_id__delete",
+        "parameters": [
+          {
+            "name": "file_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "File ID",
+              "description": "Identifier of the file to be deleted."
+            },
+            "description": "Identifier of the file to be deleted."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean",
+                  "title": "Response Delete Document Documents Delete  File Id  Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnswerDoc": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "title": "Document language",
+            "default": "EN"
+          },
+          "title": {
+            "type": "string",
+            "title": "Document title"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "x-faker": {
+                  "internet.url": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source URL"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source reference",
+            "description": "The source's own reference for the document."
+          },
+          "source_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              }
+            ],
+            "title": "Source date",
+            "description": "Original date of publication of the source, or date of creation if unknown."
+          },
+          "extra": {
+            "type": "object",
+            "title": "Extra metadata",
+            "description": "Any other metadata available in the source.",
+            "default": {}
+          },
+          "pending_review": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review status",
+            "description": "True if this document needs a reviewal, False or omitted otherwise."
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee",
+            "description": "Populated if the document has been specifically assigned to a user for review."
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              }
+            ],
+            "title": "Document ID"
+          },
+          "content": {
+            "type": "string",
+            "title": "Document content"
+          },
+          "score": {
+            "type": "number",
+            "x-faker": {
+              "number.float": {
+                "min": 0,
+                "max": 10,
+                "fractionDigits": 4
+              }
+            },
+            "title": "Score",
+            "description": "A similarity score between the asked _question_ and the document."
+          },
+          "rating": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Rating"
+              }
+            ],
+            "description": "A letter grade tied to the score, from A (best) to F (worst)."
+          },
+          "keywords": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/Keyword"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Keywords",
+            "description": "Indices of keywords in the document. Returned if the _question_ was a list of keywords."
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "source",
+          "source_date",
+          "content",
+          "score",
+          "rating"
+        ],
+        "title": "AnswerDoc"
+      },
+      "AssistantAnswer": {
+        "properties": {
+          "answer": {
+            "type": "string",
+            "title": "Answer",
+            "x-faker": {
+              "lorem.text": {
+                "wordCount.min": 20,
+                "wordCount.max": 100
+              },
+              "lorem.paragraph": {
+                "sentenceCount.min": 3,
+                "sentenceCount.max": 10
+              }
+            }
+          },
+          "result_id": {
+            "type": "string",
+            "title": "Result ID"
+          },
+          "documents": {
+            "items": {
+              "$ref": "#/components/schemas/AnswerDoc"
+            },
+            "type": "array",
+            "title": "Documents",
+            "description": "The documents used to generate the answer."
+          }
+        },
+        "type": "object",
+        "required": ["answer", "result_id", "documents"],
+        "title": "AssistantAnswer"
+      },
+      "BaseDoc": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "title": "Document language",
+            "default": "EN"
+          },
+          "title": {
+            "type": "string",
+            "title": "Document title"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source URL"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source reference",
+            "description": "The source's own reference for the document."
+          },
+          "source_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              }
+            ],
+            "title": "Source date",
+            "description": "Original date of publication of the source, or date of creation if unknown."
+          },
+          "extra": {
+            "type": "object",
+            "title": "Extra metadata",
+            "description": "Any other metadata available in the source.",
+            "default": {}
+          },
+          "pending_review": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review status",
+            "description": "True if this document needs a reviewal, False or omitted otherwise."
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee",
+            "description": "Populated if the document has been specifically assigned to a user for review."
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Document ID"
+          },
+          "content": {
+            "type": "string",
+            "title": "Document content"
+          }
+        },
+        "type": "object",
+        "required": ["title", "source", "source_date", "content"],
+        "title": "BaseDoc"
+      },
+      "DocMeta": {
+        "properties": {
+          "language": {
+            "type": "string",
+            "title": "Document language",
+            "default": "EN"
+          },
+          "title": {
+            "type": "string",
+            "title": "Document title"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              }
+            ],
+            "title": "Source"
+          },
+          "source_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source URL"
+          },
+          "source_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source reference",
+            "description": "The source's own reference for the document."
+          },
+          "source_date": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "string",
+                "format": "date"
+              }
+            ],
+            "title": "Source date",
+            "description": "Original date of publication of the source, or date of creation if unknown."
+          },
+          "extra": {
+            "type": "object",
+            "title": "Extra metadata",
+            "description": "Any other metadata available in the source.",
+            "default": {}
+          },
+          "pending_review": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Review status",
+            "description": "True if this document needs a reviewal, False or omitted otherwise."
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Assignee",
+            "description": "Populated if the document has been specifically assigned to a user for review."
+          }
+        },
+        "type": "object",
+        "required": ["title", "source", "source_date"],
+        "title": "DocMeta"
+      },
+      "FileMeta": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "File name",
+            "description": "Name of the file."
+          },
+          "date": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Date",
+            "description": "Date of the file creation."
+          },
+          "size": {
+            "type": "integer",
+            "title": "Size",
+            "description": "Size of the file."
+          }
+        },
+        "type": "object",
+        "required": ["name", "date", "size"],
+        "title": "FileMeta",
+        "description": "Class representing the metadata of a file"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "Keyword": {
+        "properties": {
+          "start": {
+            "type": "integer",
+            "title": "Start",
+            "description": "Start index of the keyword."
+          },
+          "end": {
+            "type": "integer",
+            "title": "End",
+            "description": "End index of the Keyword."
+          }
+        },
+        "type": "object",
+        "required": ["start", "end"],
+        "title": "Keyword"
+      },
+      "Rating": {
+        "type": "string",
+        "enum": ["A", "B", "C", "D", "E", "F"],
+        "title": "Rating"
+      },
+      "RecordFeedbackQuery": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "result_id": {
+            "type": "string",
+            "title": "Result ID",
+            "description": "ID of the answer (part of the returned answer data)."
+          },
+          "document_id": {
+            "type": "string",
+            "title": "Document ID",
+            "description": "Unique ID of the returned document."
+          },
+          "document_text": {
+            "type": "string",
+            "title": "Document Text",
+            "description": "Text of the document."
+          },
+          "is_relevant": {
+            "type": "boolean",
+            "title": "Relevance",
+            "description": "Whether the document is relevant to the question."
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "result_id",
+          "document_id",
+          "document_text",
+          "is_relevant"
+        ],
+        "title": "RecordFeedbackQuery"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": ["loc", "msg", "type"],
+        "title": "ValidationError"
+      }
+    }
+  }
+}
