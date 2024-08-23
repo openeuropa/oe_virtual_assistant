@@ -19,7 +19,9 @@
         "openeuropa/code-review": "^2.0",
         "openeuropa/task-runner-drupal-project-symlink": "^1.0.0-beta6",
         "phpspec/prophecy-phpunit": "^2",
-        "openeuropa/virtual-assistant-chat": "*"
+        "openeuropa/virtual-assistant-chat": "*",
+        "npm/react": "*",
+        "npm/react-dom": "*"
     },
     "autoload": {
         "psr-4": {
@@ -49,6 +51,30 @@
                 "dist": {
                     "type": "zip",
                     "url": "https://github.com/openeuropa/virtual-assistant-chat/releases/download/0.0.1/virtual-assistant-chat-0.0.1.zip"
+                }
+            }
+        },
+        "react": {
+            "type": "package",
+            "package": {
+                "name": "npm/react",
+                "version": "18.3.1",
+                "type": "drupal-library",
+                "dist": {
+                    "type": "tar",
+                    "url": "https://registry.npmjs.org/react/-/react-18.3.1.tgz"
+                }
+            }
+        },
+        "react-dom": {
+            "type": "package",
+            "package": {
+                "name": "npm/react-dom",
+                "version": "18.3.1",
+                "type": "drupal-library",
+                "dist": {
+                    "type": "tar",
+                    "url": "https://registry.npmjs.org/react-dom/-/react-dom-18.3.1.tgz"
                 }
             }
         }

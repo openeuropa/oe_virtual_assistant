@@ -3,8 +3,8 @@ chat:
     base:
       dist/virtual-assistant-chat/virtual-assistant-chat.css: {}
   js:
-    dist/react/react.production.min.js: { minified: true }
-    dist/react/react-dom.production.min.js: { minified: true }
+    dist/react/umd/react.production.min.js: { minified: true }
+    dist/react-dom/umd/react-dom.production.min.js: { minified: true }
     js/oe_virtual_assistant.behavior.js: {}
     dist/virtual-assistant-chat/virtual-assistant-chat.js: {}
   dependencies:

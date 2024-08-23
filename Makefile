@@ -20,7 +20,7 @@ help : Makefile
 # Build tasks for development.
 ## build		: Build the development environment.
 .PHONY: build build/composer
-build: .env dev up build/composer dist
+build: .env dev up build/composer
 build/composer:
 	@echo "Building $(PROJECT_NAME) project development environment."
 	$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash -c "composer install"
@@ -46,14 +46,6 @@ up:
 .PHONY: shell
 shell:
 	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
-
-# Collect library code under ./dist.
-.PHONY: dist
-dist:
-	rm -rf ./dist/react
-	mkdir -p ./dist/react
-	cp ./node_modules/react/umd/react.production.min.js ./dist/react
-	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist/react
 
 # https://stackoverflow.com/a/6273809/1826109
 %:
