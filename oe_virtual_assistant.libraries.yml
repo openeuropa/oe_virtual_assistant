@@ -1,12 +1,12 @@
 chat:
   css:
     base:
-      dist/virtual-assistant-chat.css: {}
+      dist/virtual-assistant-chat/virtual-assistant-chat.css: {}
   js:
-    dist/react.production.min.js: { minified: true }
-    dist/react-dom.production.min.js: { minified: true }
+    dist/react/react.production.min.js: { minified: true }
+    dist/react/react-dom.production.min.js: { minified: true }
     js/oe_virtual_assistant.behavior.js: {}
-    dist/virtual-assistant-chat.js: {}
+    dist/virtual-assistant-chat/virtual-assistant-chat.js: {}
   dependencies:
     - core/drupal
     - core/drupalSettings

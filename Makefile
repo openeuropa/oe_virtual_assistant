@@ -50,13 +50,10 @@ shell:
 # Collect library code under ./dist.
 .PHONY: dist
 dist:
-	rm -rf ./dist
-	mkdir -p ./dist
-	curl -s --output dist/artifacts.zip --location --header "PRIVATE-TOKEN: $(GITLAB_ACCESS_TOKEN)" https://git.fpfis.tech.ec.europa.eu/api/v4/projects/$(GITLAB_PROJECT_ID)/jobs/$(GITLAB_JOB_ID)/artifacts
-	unzip dist/artifacts.zip
-	rm dist/artifacts.zip
-	cp ./node_modules/react/umd/react.production.min.js ./dist
-	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist
+	rm -rf ./dist/react
+	mkdir -p ./dist/react
+	cp ./node_modules/react/umd/react.production.min.js ./dist/react
+	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist/react
 
 # https://stackoverflow.com/a/6273809/1826109
 %:
