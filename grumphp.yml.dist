@@ -3,13 +3,13 @@ imports:
 
 grumphp:
   git_hook_variables:
-    EXEC_GRUMPHP_COMMAND: 'docker-compose exec -T web'
+    EXEC_GRUMPHP_COMMAND: 'docker compose exec -T web'
   extensions:
     - OpenEuropa\CodeReview\ExtraTasksExtension
 
 parameters:
   tasks.phpcs.ignore_patterns:
-    - build/
+    - web/
     - node_modules/
     - vendor/
   tasks.phpcs.triggered_by:

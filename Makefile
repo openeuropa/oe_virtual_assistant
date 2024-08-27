@@ -1,6 +1,6 @@
 include .env
 
-DOCKER_COMPOSE ?= docker-compose
+DOCKER_COMPOSE ?= docker compose
 DOCKER_CMD ?= exec
 
 default: install
@@ -10,7 +10,7 @@ default: install
 	cp .env.dist .env
 
 docker-compose.override.yml:
-	cp docker-compose.override.example.yml docker-compose.override.yml
+	cp docker-compose.yml docker-compose.override.yml
 
 ## help		: Print commands help.
 .PHONY: help
@@ -35,6 +35,13 @@ install: build
 dev: docker-compose.override.yml
 	@echo Ensured docker-compose override.
 
+## build-docker	: Build the Docker image.
+.PHONY: build-docker
+build-docker:
+	@echo "Building $(PROJECT_NAME) Docker image..."
+	$(DOCKER_COMPOSE) build --no-cache web
+	$(DOCKER_COMPOSE) up -d
+
 ## up		: Start up containers.
 .PHONY: up
 up:
@@ -45,7 +52,7 @@ up:
 ##		  You can optionally pass an argument with a service name to open a shell on the specified container
 .PHONY: shell
 shell:
-	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
+	@$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash
 
 # https://stackoverflow.com/a/6273809/1826109
 %:

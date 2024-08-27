@@ -30,7 +30,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Drupal\\Tests\\oe_graphql\\": "./tests/src/"
+            "Drupal\\Tests\\oe_virtual_assistant\\": "./tests/src/"
         }
     },
     "scripts": {
@@ -83,15 +83,15 @@
         "composer-exit-on-patch-failure": true,
         "enable-patching": true,
         "installer-paths": {
-            "build/core": ["type:drupal-core"],
-            "build/profiles/contrib/{$name}": ["type:drupal-profile"],
-            "build/modules/contrib/{$name}": ["type:drupal-module"],
-            "build/themes/contrib/{$name}": ["type:drupal-theme"],
+            "web/core": ["type:drupal-core"],
+            "web/profiles/contrib/{$name}": ["type:drupal-profile"],
+            "web/modules/contrib/{$name}": ["type:drupal-module"],
+            "web/themes/contrib/{$name}": ["type:drupal-theme"],
             "dist/{$name}": ["type:drupal-library"]
         },
         "drupal-scaffold": {
             "locations": {
-                "web-root": "./build"
+                "web-root": "./web"
             }
         }
     },
