@@ -18,8 +18,6 @@ make
 
 This will:
 
-- Download the library and React using NPM
-- Copy JS assets in `./dist`
 - Start docker containers
 - Build and install the site
 

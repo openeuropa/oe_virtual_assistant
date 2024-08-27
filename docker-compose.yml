@@ -1,29 +1,21 @@
 services:
   web:
-    image: fpfis/httpd-php-ci:8.1
-    working_dir: /var/www/html
+    build:
+      context: .
+    container_name: "${PROJECT_NAME}_web"
+    environment:
+      #      PHP_XDEBUG: "debug"
+      PHP_XDEBUG: "off"
+      PHP_XDEBUG_CLIENT_HOST: 172.17.0.1 # Linux
+      #      PHP_XDEBUG_CLIENT_HOST: host.docker.internal # Docker 18.03+ Mac/Win
+      #      PHP_XDEBUG_CLIENT_HOST: 10.0.75.1 # Windows
+      PHP_IDE_CONFIG: "serverName=ILO"
+      PHP_XDEBUG_IDEKEY: "PHPSTORM"
+      DRUSH_OPTIONS_URI: http://localhost:8080
     ports:
-      - 8080:8080
+      - '8080:80'
     volumes:
-      - .:/var/www/html # Non Mac users.
-      # - nfsmount:/var/www/html # Mac Users with the nfsmount volume.
-    environment:
-      COMPOSERVER: "--2"
-      XDEBUG_CONFIG: "client_host=172.17.0.1" # Non-Mac users.
-      # XDEBUG_CONFIG: "client_host=host.docker.internal" # Mac users.
-      XDEBUG_MODE: "develop, debug"
-      PHP_IDE_CONFIG: "serverName=Docker"
-      # Enable step debugging for all PHP request. See ./README.md#step-debugging for more information.
-      #XDEBUG_SESSION: 1
-      DRUSH_OPTIONS_URI: http://localhost:8080/build
-  mysql:
-    image: percona/percona-server:5.7
-    command: --innodb-log-file-size=1G --max_allowed_packet=1G --innodb-buffer-pool-size=512M --wait_timeout=3000 --net_write_timeout=3000 --log_error_verbosity=3
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
-  #    ports:
-  #      - 3306:3306
-
+      - ./:/opt/drupal
 
   # If you would like to see what is going on you can run the following on your host:
   # docker run --rm -p 4444:4444 -p 5900:5900 --network="host" selenium/standalone-chrome-debug:latest

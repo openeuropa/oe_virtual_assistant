@@ -1,33 +1,27 @@
-name: ci
+name: CI
 on: [pull_request]
 jobs:
   automated-tests:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        php_version: ["8.1"]
-        composer_command: ["composer install"]
+        php_version: ["8.2"]
     env:
       PHP_VERSION: ${{ matrix.php_version }}
     steps:
       - name: clone
-        uses: actions/checkout@v2
-      - run: docker-compose up -d
-      - name: build
-        run: docker-compose exec -T web ${{ matrix.composer_command }}
-      - name: wait-for-db
-        run: sleep 10
+        uses: actions/checkout@v4
+      - run: make
       - name: test
-        run: docker-compose exec -T web ./vendor/bin/phpunit
+        # To avoid file permissions issues, we run the phpunit with user 33, which is the same as the apache user id container.
+        run: docker compose exec -u 33 -T web phpunit
   code-sniffer:
     runs-on: ubuntu-latest
     env:
-      PHP_VERSION: "8.1"
+      PHP_VERSION: "8.2"
     steps:
       - name: clone
-        uses: actions/checkout@v2
-      - run: docker-compose up -d
-      - name: build
-        run: docker-compose exec -T web composer install
+        uses: actions/checkout@v4
+      - run: make
       - name: test
-        run: docker-compose exec -T web ./vendor/bin/grumphp run
+        run: docker compose exec -T web grumphp run

@@ -1,6 +1,6 @@
 include .env
 
-DOCKER_COMPOSE ?= docker-compose
+DOCKER_COMPOSE ?= docker compose
 DOCKER_CMD ?= exec
 
 default: install
@@ -10,7 +10,7 @@ default: install
 	cp .env.dist .env
 
 docker-compose.override.yml:
-	cp docker-compose.override.example.yml docker-compose.override.yml
+	cp docker-compose.yml docker-compose.override.yml
 
 ## help		: Print commands help.
 .PHONY: help
@@ -20,7 +20,7 @@ help : Makefile
 # Build tasks for development.
 ## build		: Build the development environment.
 .PHONY: build build/composer
-build: .env dev up build/composer dist
+build: .env dev up build/composer
 build/composer:
 	@echo "Building $(PROJECT_NAME) project development environment."
 	$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash -c "composer install"
@@ -35,6 +35,13 @@ install: build
 dev: docker-compose.override.yml
 	@echo Ensured docker-compose override.
 
+## build-docker	: Build the Docker image.
+.PHONY: build-docker
+build-docker:
+	@echo "Building $(PROJECT_NAME) Docker image..."
+	$(DOCKER_COMPOSE) build --no-cache web
+	$(DOCKER_COMPOSE) up -d
+
 ## up		: Start up containers.
 .PHONY: up
 up:
@@ -45,18 +52,7 @@ up:
 ##		  You can optionally pass an argument with a service name to open a shell on the specified container
 .PHONY: shell
 shell:
-	docker exec -ti -e COLUMNS=$(shell tput cols) -e LINES=$(shell tput lines) $(shell docker ps --filter name='$(PROJECT_NAME)-$(or $(filter-out $@,$(MAKECMDGOALS)), 'web')' --format "{{ .ID }}") bash
-
-# Collect library code under ./dist.
-.PHONY: dist
-dist:
-	rm -rf ./dist
-	mkdir -p ./dist
-	curl -s --output dist/artifacts.zip --location --header "PRIVATE-TOKEN: $(GITLAB_ACCESS_TOKEN)" https://git.fpfis.tech.ec.europa.eu/api/v4/projects/$(GITLAB_PROJECT_ID)/jobs/$(GITLAB_JOB_ID)/artifacts
-	unzip dist/artifacts.zip
-	rm dist/artifacts.zip
-	cp ./node_modules/react/umd/react.production.min.js ./dist
-	cp ./node_modules/react-dom/umd/react-dom.production.min.js ./dist
+	@$(DOCKER_COMPOSE) $(DOCKER_CMD) web bash
 
 # https://stackoverflow.com/a/6273809/1826109
 %:

@@ -1,21 +1,22 @@
 drupal:
-  root: "build"
-  base_url: "http://web:8080/build"
+  root: "web"
+  base_url: "http://localhost:8080"
   site:
     profile: "minimal"
     name: "OpenEuropa"
   database:
-    host: "mysql"
-    port: "3306"
-    name: "oe_graphql"
-    user: "root"
-    password: ""
+    scheme: "sqlite"
+    host: "sites/default/files"
+    name: ".ht.drupal"
+    password: ''
+    port: ''
   post_install:
     # Prepare the instance.
     - "./vendor/bin/drush en toolbar -y"
     - "./vendor/bin/drush en field_ui -y"
     - "./vendor/bin/drush en language -y"
     - "./vendor/bin/drush en oe_virtual_assistant -y"
+    - "./vendor/bin/drush en config_devel -y"
     - "./vendor/bin/drush theme:enable olivero -y"
     - "./vendor/bin/drush theme:enable claro -y"
     - "./vendor/bin/drush config-set system.theme default olivero -y"
@@ -23,9 +24,9 @@ drupal:
     - "./vendor/bin/drush config-set node.settings use_admin_theme 1 -y"
     - "./vendor/bin/drush -y config-set system.performance css.preprocess 0"
     - "./vendor/bin/drush -y config-set system.performance js.preprocess 0"
-    # Enable the modules.
-    - "./vendor/bin/drush en config_devel -y"
     - "./vendor/bin/drush cr"
+    - "chmod -R 775 web/sites"
+    - "chown -R www-data:www-data web/sites"
   settings:
     settings:
       file_scan_ignore_directories:
@@ -35,6 +36,9 @@ drupal:
         - "${drupal.root}"
       extension_discovery_scan_tests: TRUE
       file_private_path: "sites/default/files/private"
+    config:
+      system.logging:
+        error_level: 'verbose'
 
 selenium:
   host: "http://selenium"
