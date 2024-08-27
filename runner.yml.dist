@@ -53,3 +53,50 @@ commands:
     - { task: "run", command: "setup:phpunit" }
   setup:phpunit:
     - { task: "process", source: "phpunit.xml.dist", destination: "phpunit.xml" }
+
+release:
+  tasks:
+    - "git config --global --add safe.directory /opt/drupal"
+    - { task: "remove", file: "oe_virtual_assistant/.github" }
+    - { task: "remove", file: "oe_virtual_assistant/.editorconfig" }
+    - { task: "remove", file: "oe_virtual_assistant/.env.dist" }
+    - { task: "remove", file: "oe_virtual_assistant/.gitattributes" }
+    - { task: "remove", file: "oe_virtual_assistant/.gitignore" }
+    - { task: "remove", file: "oe_virtual_assistant/docker-compose.yml" }
+    - { task: "remove", file: "oe_virtual_assistant/Dockerfile" }
+    - { task: "remove", file: "oe_virtual_assistant/Makefile" }
+    - { task: "remove", file: "oe_virtual_assistant/phpcs.xml.dist" }
+    - { task: "remove", file: "oe_virtual_assistant/phpunit.xml.dist" }
+    - { task: "remove", file: "oe_virtual_assistant/runner.yml.dist" }
+    - { task: "copy", from: "dist", to: "oe_virtual_assistant/dist" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/cjs" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/umd/react.development.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/umd/react.profiling.min.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/index.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/jsx-dev-runtime.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/jsx-runtime.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react/react.shared-subset.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/cjs" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom.development.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom.profiling.min.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-server.browser.development.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-server.browser.production.min.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-server-legacy.browser.development.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-server-legacy.browser.production.min.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-test-utils.development.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/umd/react-dom-test-utils.production.min.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/index.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/profiling.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/client.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/server.browser.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/server.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/server.node.js" }
+    - { task: "remove", file: "oe_virtual_assistant/dist/react-dom/test-utils.js" }
+    - task: "append"
+      file: "oe_virtual_assistant/oe_virtual_assistant.info.yml"
+      text: |
+
+        # Information added by OpenEuropa packaging script on ${release.date} at ${release.time}.
+        project: oe_virtual_assistant
+        version: ${release.version}
+        datestamp: ${release.timestamp}
