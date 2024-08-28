@@ -15,3 +15,6 @@ docker-compose.*.yml
 /.gitattributes
 /.env
 /dist
+/oe_virtual_assistant
+*.tar.gz
+*.zip
