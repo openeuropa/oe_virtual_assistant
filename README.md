@@ -1,132 +1,105 @@
 # OpenEuropa Virtual Assistant
 
-Virtual Assistant integration module for OpenEuropa.
+This module integrates the Virtual Assistant with the OpenEuropa platform.
 
-## Development setup
+## Setup
 
-You need to set an access token to the EC GitLab. To do so copy `.env.dist` to `.env` and set `GITLAB_ACCESS_TOKEN=`
+To get started with this project, ensure you have the following tools installed on your machine:
 
-```shell
-cp .env.dist .env # then set GITLAB_ACCESS_TOKEN=
-```
+- [Docker](https://www.docker.com/get-docker)
+- [Docker Compose](https://docs.docker.com/compose/)
 
-After that, simply run:
+Once these are ready, set up the project by running:
 
 ```shell
 make
 ```
 
-This will:
+This command will:
 
-- Start docker containers
-- Build and install the site
+1. Generate a Git-ignored [`docker-compose.override.yml`](docker-compose.override.yml) file.
+2. Start the Docker containers in production mode.
+3. Build and install the target site, accessible at [http://127.0.0.1:8080](http://127.0.0.1:8080).
 
+A post-command hook (`drupal:site-setup`) is automatically triggered after running `composer install`. This hook symlinks
+the module to the appropriate directory within the test site and substitutes tokens in the test configuration files.
 
-A post command hook (`drupal:site-setup`) is triggered automatically after `composer install`.
-This will symlink the module in the proper directory within the test site and perform token substitution in test configuration files.
-
-**Please note:** project files and directories are symlinked within the test site by using the
+**Note:** Project files and directories are symlinked within the test site using the
 [OpenEuropa Task Runner's Drupal project symlink](https://github.com/openeuropa/task-runner-drupal-project-symlink) command.
 
-If you add a new file or directory in the root of the project, you need to re-run `drupal:site-setup` in order to make
-sure they are be correctly symlinked.
+If you add a new file or directory to the root of the project, you must re-run `drupal:site-setup` to ensure proper symlinking.
 
-If you don't want to re-run a full site setup for that, you can simply run:
+To avoid a full site setup, you can instead run:
 
+```shell
+./vendor/bin/run drupal:symlink-project
 ```
-$ ./vendor/bin/run drupal:symlink-project
+
+Additional [`Makefile`](Makefile) targets include:
+
+```shell
+$ make help
+ dev            : Set up development files like ".env" and "docker-compose.override.yml".
+ help           : Display available commands.
+ build          : Build the site without installing it. Also runs "dev" and "up".
+ install        : Install the target site. Also runs "build".
+ build-docker   : (Re)build the Docker image and start the containers.
+ up             : Start the containers.
+ shell          : Access the `web` container via shell.
 ```
 
-Install the test site by running:
+## Development
+
+The [`Dockerfile`](Dockerfile) for this project includes a `dev` target that installs and enables `xdebug`. To use this,
+ensure your [`docker-compose.override.yml`](docker-compose.override.yml) is configured as follows:
+
+```yaml
+services:
+  web:
+    build:
+      context: .
+      target: dev
+#      target: base
+```
+
+Rebuild the container by running:
+
+```shell
+make build-docker
+```
+
+### Running Tests
+
+To run GrumPHP checks:
 
 ```bash
-$ ./vendor/bin/run drupal:site-install
+docker compose exec web grumphp run
 ```
 
-The development site web root should be available in the `build` directory.
-
-### Using Docker Compose
-
-Alternatively, you can build a development site using [Docker](https://www.docker.com/get-docker) and
-[Docker Compose](https://docs.docker.com/compose/) with the provided configuration.
-
-Docker provides the necessary services and tools such as a web server and a database server to get the site running,
-regardless of your local host configuration.
-
-#### Requirements:
-
-- [Docker](https://www.docker.com/get-docker)
-- [Docker Compose](https://docs.docker.com/compose/)
-
-#### Configuration
-
-By default, Docker Compose reads two files, a `docker-compose.yml` and an optional `docker-compose.override.yml` file.
-By convention, the `docker-compose.yml` contains your base configuration and it's provided by default.
-The override file, as its name implies, can contain configuration overrides for existing services or entirely new
-services.
-If a service is defined in both files, Docker Compose merges the configurations.
-
-Find more information on Docker Compose extension mechanism on [the official Docker Compose documentation](https://docs.docker.com/compose/extends/).
-
-#### Usage
-
-To start, run:
+To run PHPUnit tests:
 
 ```bash
-docker-compose up
+docker compose exec web phpunit
 ```
 
-It's advised to not daemonize `docker-compose` so you can turn it off (`CTRL+C`) quickly when you're done working.
-However, if you'd like to daemonize it, you have to add the flag `-d`:
+### Step Debugging
+
+To enable step debugging from the command line, pass the `XDEBUG_SESSION` environment variable with any value to the container:
 
 ```bash
-docker-compose up -d
+docker compose exec -e XDEBUG_SESSION=1 web <your command>
 ```
 
-Then:
+**Note:** Starting with XDebug 3, a connection error message will appear in the console if the `XDEBUG_SESSION` variable
+is set but your client is not listening for debugging connections. This message may cause false negatives in PHPUnit tests.
 
-```bash
-docker-compose exec web composer install
-docker-compose exec web ./vendor/bin/run drupal:site-install
-```
-
-Using default configuration, the development site files should be available in the `build` directory and the development site
-should be available at: [http://127.0.0.1:8080/build](http://127.0.0.1:8080/build).
-
-#### Running the tests
-
-To run the grumphp checks:
-
-```bash
-docker-compose exec web ./vendor/bin/grumphp run
-```
-
-To run the phpunit tests:
-
-```bash
-docker-compose exec web ./vendor/bin/phpunit
-```
-
-#### Step debugging
-
-To enable step debugging from the command line, pass the `XDEBUG_SESSION` environment variable with any value to
-the container:
-
-```bash
-docker-compose exec -e XDEBUG_SESSION=1 web <your command>
-```
-
-Please note that, starting from XDebug 3, a connection error message will be outputted in the console if the variable is
-set but your client is not listening for debugging connections. The error message will cause false negatives for PHPUnit
-tests.
-
-To initiate step debugging from the browser, set the correct cookie using a browser extension or a bookmarklet
-like the ones generated at https://www.jetbrains.com/phpstorm/marklets/.
+To initiate step debugging from the browser, set the appropriate cookie using a browser extension or a bookmarklet, such
+as those generated by [JetBrains PhpStorm](https://www.jetbrains.com/phpstorm/marklets/).
 
 ## Contributing
 
-Please read [the full documentation](https://github.com/openeuropa/openeuropa) for details on our code of conduct, and the process for submitting pull requests to us.
+Please read [the full documentation](https://github.com/openeuropa/openeuropa) for our code of conduct and instructions on how to submit pull requests.
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the available versions, see the [tags on this repository](https://github.com/openeuropa/oe_translation/tags).
+We use [Semantic Versioning (SemVer)](http://semver.org/). For available versions, see the [tags on this repository](https://github.com/openeuropa/oe_translation/tags).
