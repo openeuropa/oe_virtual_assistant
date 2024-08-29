@@ -8,7 +8,8 @@
     "require": {
         "php": ">=8.0",
         "cweagans/composer-patches": "~1.4 || ^2.0",
-        "drupal/core": "^10"
+        "drupal/core": "^10",
+        "drupal/jwt": "^2.1"
     },
     "require-dev": {
         "composer/installers": "^1.5",

@@ -2,5 +2,8 @@ name: OpenEuropa Virtual Assistant
 description: Virtual Assistant integration for OpenEuropa components.
 package: OpenEuropa
 
+dependencies:
+  - jwt:jwt_auth_issuer
+
 type: module
 core_version_requirement: ^10
