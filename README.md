@@ -1,6 +1,25 @@
 # OpenEuropa Virtual Assistant
 
-This module integrates the Virtual Assistant with the OpenEuropa platform.
+This module allows you to seamlessly integrate a React-based AI virtual assistant chat into your Drupal site.
+This module also enables your Drupal site to function as a JSON Web Token (JWT) issuer, providing secure authentication
+and authorization for the chat's communication with its backend.
+
+## Features
+
+- **Chat Integration**: Embed a React-based AI virtual assistant chat into any Drupal site where this module is enabled.
+- **JWT Issuer**: Configure your Drupal site to issue JWT tokens to authenticated users, ensuring secure communication between the chat and its backend.
+- **Secret-Based Authentication**: Secure JWT generation and validation using a shared secret string between your Drupal site and the AI backend.
+
+## Configuration
+
+To securely sign the JWT tokens issued by your Drupal site, you need to configure a shared secret string that will be used
+by both your Drupal site and the AI backend.
+
+The shared secret string should be set as an environment variable on your server. This secret is crucial for the security of your JWT tokens,
+as it is used to both sign and validate the tokens.
+
+- Environment Variable Name: `OE_VIRTUAL_ASSISTANT_JWT_SECRET`
+- Minimum Length Requirement: The secret should be at least 256 bits long. This translates to a minimum of 32 characters.
 
 ## Setup
 
