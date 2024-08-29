@@ -42,6 +42,11 @@ build-docker:
 	$(DOCKER_COMPOSE) build --no-cache web
 	$(DOCKER_COMPOSE) up -d
 
+## phpunit	: Runs phpunit tests.
+.PHONY: phpunit
+phpunit:
+	$(DOCKER_COMPOSE) $(DOCKER_CMD) -e XDEBUG_SESSION=1 -u 33 -T web phpunit $(filter-out $@,$(MAKECMDGOALS))
+
 ## up		: Start up containers.
 .PHONY: up
 up:
