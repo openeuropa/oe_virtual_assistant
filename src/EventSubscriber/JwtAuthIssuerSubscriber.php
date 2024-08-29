@@ -6,6 +6,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\jwt\Authentication\Event\JwtAuthEvents;
 use Drupal\jwt\Authentication\Event\JwtAuthGenerateEvent;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
  * JWT Auth Issuer Subscriber set claims on a JWT being issued.
@@ -20,13 +21,23 @@ class JwtAuthIssuerSubscriber implements EventSubscriberInterface {
   protected AccountInterface $currentUser;
 
   /**
+   * The current request.
+   *
+   * @var Symfony\Component\HttpFoundation\RequestStack
+   */
+  protected RequestStack $requestStack;
+
+  /**
    * Constructor.
    *
-   * @param \Drupal\Core\Session\AccountInterface $user
+   * @param \Drupal\Core\Session\AccountInterface $current_user
    *   The current user.
+   * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
+   *   The request stack service.
    */
-  public function __construct(AccountInterface $user) {
-    $this->currentUser = $user;
+  public function __construct(AccountInterface $current_user, RequestStack $request_stack) {
+    $this->currentUser = $current_user;
+    $this->requestStack = $request_stack;
   }
 
   /**
@@ -45,8 +56,10 @@ class JwtAuthIssuerSubscriber implements EventSubscriberInterface {
    *   The event.
    */
   public function setClaims(JwtAuthGenerateEvent $event) {
-    $event->addClaim(['user', 'email'], $this->currentUser->getEmail());
-    $event->addClaim(['user', 'name'], $this->currentUser->getAccountName());
+    $event->addClaim('sub', $this->currentUser->getEmail());
+    $event->addClaim('iss', $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost());
+    // Remove custom Drupal claims.
+    $event->removeClaim('drupal');
   }
 
 }
