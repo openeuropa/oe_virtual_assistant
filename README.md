@@ -58,13 +58,15 @@ Additional [`Makefile`](Makefile) targets include:
 
 ```shell
 $ make help
- dev            : Set up development files like ".env" and "docker-compose.override.yml".
- help           : Display available commands.
- build          : Build the site without installing it. Also runs "dev" and "up".
- install        : Install the target site. Also runs "build".
- build-docker   : (Re)build the Docker image and start the containers.
- up             : Start the containers.
- shell          : Access the `web` container via shell.
+ dev            : Set up development files, such as ".env" and "docker-compose.override.yml".
+ help           : Print commands help.
+ build          : Build the site, without installing it. It also runs "dev" and "up".
+ install        : Install the target site. It also runs "build".
+ build-docker   : (Re)-build the Docker image and start up the containers.
+ phpunit        : Runs a specific phpunit test. Example: "make phpunit MyTest".
+ up             : Start up containers.
+ shell          : Access `web` container via shell.
+
 ```
 
 ## Development
