@@ -7,7 +7,7 @@ namespace Drupal\Tests\oe_virtual_assistant\Functional;
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Smoke test.
+ * Access test.
  */
 class AccessTest extends BrowserTestBase {
 
