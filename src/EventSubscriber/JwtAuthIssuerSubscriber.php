@@ -56,6 +56,7 @@ class JwtAuthIssuerSubscriber implements EventSubscriberInterface {
    *   The event.
    */
   public function setClaims(JwtAuthGenerateEvent $event) {
+    $event->addClaim('name', (string) $this->currentUser->getDisplayName());
     $event->addClaim('sub', $this->currentUser->getEmail());
     $event->addClaim('iss', $this->requestStack->getCurrentRequest()->getSchemeAndHttpHost());
     // Remove custom Drupal claims.
