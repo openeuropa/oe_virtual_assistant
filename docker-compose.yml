@@ -11,7 +11,7 @@ services:
       PHP_XDEBUG_CLIENT_HOST: 172.17.0.1 # Linux
 #      PHP_XDEBUG_CLIENT_HOST: host.docker.internal # Docker 18.03+ Mac/Win
 #      PHP_XDEBUG_CLIENT_HOST: 10.0.75.1 # Windows
-      PHP_IDE_CONFIG: "serverName=ILO"
+      PHP_IDE_CONFIG: "serverName=Docker"
       PHP_XDEBUG_IDEKEY: "PHPSTORM"
       DRUSH_OPTIONS_URI: http://localhost:8080
       # Secret key must be minimum 32 characters long.

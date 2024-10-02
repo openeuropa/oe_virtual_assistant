@@ -5,3 +5,6 @@ oe_virtual_assistant.settings:
     backend_service_url:
       type: string
       label: 'Backend Service URL'
+    token_issuer_url:
+      type: string
+      label: 'Token issuer URL'

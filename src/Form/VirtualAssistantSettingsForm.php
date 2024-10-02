@@ -37,6 +37,12 @@ class VirtualAssistantSettingsForm extends ConfigFormBase {
       '#description' => $this->t('The URL of the backend service for the virtual assistant.'),
       '#required' => TRUE,
     ];
+    $form['token_issuer_url'] = [
+      '#type' => 'url',
+      '#title' => $this->t('JWT issuer URL'),
+      '#default_value' => $config->get('token_issuer_url'),
+      '#description' => $this->t('The URL of the JWT token issuer. Leave empty to use the current site URL.'),
+    ];
 
     return parent::buildForm($form, $form_state);
   }
@@ -47,6 +53,7 @@ class VirtualAssistantSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->configFactory->getEditable('oe_virtual_assistant.settings')
       ->set('backend_service_url', $form_state->getValue('backend_service_url'))
+      ->set('token_issuer_url', $form_state->getValue('token_issuer_url'))
       ->save();
 
     parent::submitForm($form, $form_state);
