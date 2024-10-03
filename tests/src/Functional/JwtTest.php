@@ -51,6 +51,14 @@ class JwtTest extends BrowserTestBase {
     $this->assertEquals('user@email.com', $data->sub, "The 'sub' claim does not match the expected value.");
     $this->assertEquals('http://localhost', $data->iss, "The 'iss' claim does not match the expected value.");
     $this->assertEquals(3600, $data->exp - $data->iat, "The difference between 'exp' and 'iat' is not 3600 seconds.");
+
+    // Assert custom ISS value.
+    $this->config('oe_virtual_assistant.settings')->set('token_issuer_url', 'http://example.com')->save();
+    $session->visit('/jwt/token');
+    $this->assertEquals(200, $session->getStatusCode());
+    $content = $session->getPage()->getContent();
+    $data = JWT::decode(json_decode($content)->token, new Key('12345678123456781234567812345678', 'HS256'));
+    $this->assertEquals('http://example.com', $data->iss, "The 'iss' claim does not match the expected value.");
   }
 
 }
