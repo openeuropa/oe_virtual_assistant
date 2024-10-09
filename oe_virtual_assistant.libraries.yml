@@ -2,6 +2,7 @@ chat:
   css:
     base:
       dist/virtual-assistant-chat/virtual-assistant-chat.css: {}
+      css/style.css: { }
   js:
     dist/react/umd/react.production.min.js: { minified: true }
     dist/react-dom/umd/react-dom.production.min.js: { minified: true }
