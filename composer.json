@@ -47,11 +47,11 @@
             "type": "package",
             "package": {
                 "name": "openeuropa/virtual-assistant-chat",
-                "version": "0.0.2",
+                "version": "0.0.4",
                 "type": "drupal-library",
                 "dist": {
                     "type": "zip",
-                    "url": "https://github.com/openeuropa/virtual-assistant-chat/releases/download/0.0.2/virtual-assistant-chat-0.0.2.zip"
+                    "url": "https://github.com/openeuropa/virtual-assistant-chat/releases/download/0.0.4/virtual-assistant-chat-0.0.4.zip"
                 }
             }
         },
@@ -106,7 +106,8 @@
             "enable-patching": true,
             "phpro/grumphp": true,
             "phpstan/extension-installer": true,
-            "php-http/discovery": true
+            "php-http/discovery": true,
+            "tbachert/spi": true
         }
     }
 }

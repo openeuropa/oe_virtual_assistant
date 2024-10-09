@@ -1,0 +1,3 @@
+.nlux-comp-composer > textarea:focus {
+  box-shadow: none !important;
+}
